@@ -81,47 +81,31 @@ describe TaxiMeter do
     end
   end
 
-  # context "The taxi meter records waiting time" do
-  #   before do
-  #     @meter = TaxiMeter.new
-  #   end
+  context "The taxi meter records waiting time" do
+    before do
+      @meter = TaxiMeter.new
+    end
 
-  #   it "checks the wait time" do
-  #     # Copy/Paste previous start time test
-  #     start_time = Time.now
-  #     Time.stub(:now).and_return(start_time)
+    it "checks the wait time" do
+      # Copy/Paste previous start time test
+      start_time = Time.now
+      @meter.start
+      Time.stub(:now).and_return(start_time + 60 * 60)
+      @meter.stop
 
-  #     # This should grab the current time
-  #     @meter.start
+      expect(@meter.stop).to eq(start_time + 60 * 60)
+    end
 
-  #     # Re-stub Time to be 5 minutes into the future
-  #     Time.stub(:now).and_return(start_time + 5 * 60)
+    xit "checks the wait cost" do
+      start_time = Time.now
+      @meter.start
+      Time.stub(:now).and_return(start_time + 60 * 60)
+      @meter.stop
+binding.pry
+      expect(@meter.waiting_time_in_minutes).to eq(60)
 
-  #     # Once started, start_time shouldn't rely on the current time
-  #     expect(@meter.start_time).to eq(start_time)
-
-  #     # Copy/Paste the previous stop time test
-  #     #freeze time to the point when the meter stops
-  #     stop_time = Time.now
-  #     Time.stub(:now).and_return(stop_time)
-
-  #     # this should grab the current time
-  #     @meter.stop
-
-  #     #re-stub Time to be 5min in the future
-  #     Time.stub(:now).and_return(stop_time + 30 * 60)
-
-  #     # once stopped, stop_time shouldn't rely on current time
-  #     expect(@meter.stop_time).to eq(stop_time)
-
-
-  #     expect(@meter.waiting_time).to eq(30)
-  #   end
-
-  #   xit "checks the wait cost" do
-  #     expect(@meter.waiting_time).to eq(0)
-  #   end
-  # end
+    end
+  end
 
   context "The taxi meter starts from ABIA" do
     before do

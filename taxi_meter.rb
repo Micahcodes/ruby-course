@@ -6,6 +6,7 @@ class TaxiMeter
     @amount_due = amount_due
     @miles_driven = miles_driven
     @miles_in_sixths = @miles_driven * 6.0
+    @waiting_time_in_minutes = 0
   end
 
   def start
@@ -25,7 +26,7 @@ class TaxiMeter
 
   # calc wait time cost
   def waiting_time
-    @waiting_time_in_minutes = (@meter.stop - @meter.start) / 60.0
+    waiting_time_in_minutes = (@stop_time - @meter.start_time) / 60.0
 
     # @wait_cost = waiting_time_in_minutes * 2900.0 / 60.0
     # return @wait_cost

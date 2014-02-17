@@ -96,13 +96,12 @@ describe TaxiMeter do
       expect(@meter.stop).to eq(start_time + 60 * 60)
     end
 
-    xit "checks the wait cost" do
+    it "checks the current cost" do
       start_time = Time.now
       @meter.start
       Time.stub(:now).and_return(start_time + 60 * 60)
-      @meter.stop
-binding.pry
-      expect(@meter.waiting_time_in_minutes).to eq(60)
+
+      expect(@meter.amount_due).to eq(3110)
 
     end
   end
@@ -117,7 +116,9 @@ binding.pry
       @meter.start
     end
 
-    xit "has a minimum fare of $13.10"
+    xit "has a minimum fare of $13.10" do
+      expect(@meter.amount_due).to eq(1310)
+    end
   end
 
 end

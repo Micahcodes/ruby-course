@@ -25,7 +25,11 @@ class TaxiMeter
     if @airport && current_due < 1310
       return 1310
     else
-      return current_due
+      if (Time.now.hour <= 4) || (Time.now.hour >= 21)
+        return current_due + 100
+      else
+        return current_due
+      end
     end
   end
 

@@ -62,8 +62,8 @@ describe TaxiMeter do
   context "The taxi meter starts" do
     before do
       # We want to freeze time to the point when the meter starts
-      @start_time = Time.now
-      Time.stub(:now).and_return(@start_time)
+      @seven_pm = Time.parse("2014-02-11 19:00:00 -0600")
+      Time.stub(:now).and_return(@seven_pm)
 
       @meter = TaxiMeter.new
       @meter.start
@@ -84,6 +84,8 @@ describe TaxiMeter do
   context "The taxi meter records waiting time" do
     before do
       @meter = TaxiMeter.new
+      @seven_pm = Time.parse("2014-02-11 19:00:00 -0600")
+      Time.stub(:now).and_return(@seven_pm)
     end
 
     it "checks the wait time" do
@@ -97,12 +99,33 @@ describe TaxiMeter do
     end
 
     it "checks the current cost" do
-      start_time = Time.now
       @meter.start
-      Time.stub(:now).and_return(start_time + 60 * 60)
+      time = @seven_pm + (60 * 60)
+      Time.stub(:now).and_return(time)
 
       expect(@meter.amount_due).to eq(3110)
+    end
 
+    it "charges additional dollar if start time between 9pm and 4am" do
+      @three_am = Time.parse("2014-02-11 03:00:00 -0600")
+      Time.stub(:now).and_return(@three_am)
+      @meter.start
+      new_time = @three_am + (40 * 60)
+      Time.stub(:now).and_return(new_time)
+      @meter.miles_driven = 10
+
+      expect(@meter.amount_due).to eq(4643)
+    end
+
+    it "charges $29.00 an hour for waiting time, prorated by minute" do
+      @seven_pm = Time.parse("2014-02-11 19:00:00 -0600")
+      Time.stub(:now).and_return(@seven_pm)
+      @meter.start
+      time = @seven_pm + (40 * 60)
+      Time.stub(:now).and_return(time)
+      @meter.miles_driven = 10
+
+      expect(@meter.amount_due).to eq(4543)
     end
   end
 
